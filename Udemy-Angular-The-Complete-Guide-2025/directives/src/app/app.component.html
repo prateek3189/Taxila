@@ -1,0 +1,14 @@
+<main>
+  <app-learning-resources appLog />
+
+  <hr />
+
+  <app-auth />
+  <p *appAuth="'admin'" class="protected-content admin">This is a admin user</p>
+  <p *appAuth="'user'" class="protected-content unauthenticated">
+    This is a unauthenticated user
+  </p>
+  <p *appAuth="'guest'" class="protected-content authenticated">
+    This is a authenticated user
+  </p>
+</main>
