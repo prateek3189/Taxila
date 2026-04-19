@@ -1,0 +1,12 @@
+<form (submit)="onSubmit(titleInput, requestInput)" #form>
+  <app-control label="Title">
+    <input name="title" id="title" #titleInput />
+  </app-control>
+
+  <app-control label="Request">
+    <textarea name="request" id="request" rows="3" #requestInput></textarea>
+  </app-control>
+  <p>
+    <button appButton label="Submit" icon="⌲"></button>
+  </p>
+</form>

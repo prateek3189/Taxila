@@ -1,0 +1,26 @@
+<app-header></app-header>
+
+<main>
+  <div id="dashboard">
+    <app-card
+      title="Server Status"
+      [image]="{ src: 'status.png', alt: 'Server Status' }"
+    >
+      <app-server-status></app-server-status>
+    </app-card>
+
+    <app-card
+      title="Server Status"
+      [image]="{ src: 'list.png', alt: 'Server Status' }"
+    >
+      <app-traffic></app-traffic>
+    </app-card>
+
+    <app-card
+      title="Server Status"
+      [image]="{ src: 'globe.png', alt: 'Server Status' }"
+    >
+      <app-tickets></app-tickets>
+    </app-card>
+  </div>
+</main>

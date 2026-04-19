@@ -1,0 +1,21 @@
+<article>
+  <h3>
+    <div
+      [class]="{
+        'ticket-open': ticket.status === 'open',
+        'ticket-closed': ticket.status === 'closed',
+      }"
+    ></div>
+    <button>
+      <span class="text">{{ ticket.title }}</span>
+    </button>
+  </h3>
+
+  @if (true) {
+    <p>{{ ticket.title }}</p>
+
+    @if (true) {
+      <p><button (click)="onClose()">Mark as completed</button></p>
+    }
+  }
+</article>
