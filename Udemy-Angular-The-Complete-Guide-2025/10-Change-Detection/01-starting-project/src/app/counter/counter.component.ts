@@ -1,0 +1,40 @@
+import { Component, inject, NgZone, OnInit, signal } from '@angular/core';
+
+import { InfoMessageComponent } from '../info-message/info-message.component';
+
+@Component({
+  selector: 'app-counter',
+  standalone: true,
+  templateUrl: './counter.component.html',
+  styleUrl: './counter.component.css',
+  imports: [InfoMessageComponent],
+})
+export class CounterComponent implements OnInit {
+  zone = inject(NgZone);
+  count = signal(0);
+
+  get debugOutput() {
+    console.log('[Counter] "debugOutput" binding re-evaluated.');
+    return 'Counter Component Debug Output';
+  }
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.count.set(10);
+    }, 2000);
+
+    this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        console.log('I Want To Run This Outside Angular');
+      }, 4000);
+    });
+  }
+
+  onDecrement() {
+    this.count.update((prevCount) => prevCount - 1);
+  }
+
+  onIncrement() {
+    this.count.update((prevCount) => prevCount + 1);
+  }
+}
