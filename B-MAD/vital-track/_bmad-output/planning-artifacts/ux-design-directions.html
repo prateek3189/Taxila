@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vital-track — UX Design Directions</title>
+<style>
+  :root {
+    --brand-primary: #0F766E;
+    --brand-primary-light: #CCFBF1;
+    --brand-secondary: #0369A1;
+    --surface: #FAFAFA;
+    --surface-elevated: #FFFFFF;
+    --text-primary: #171717;
+    --text-secondary: #525252;
+    --text-muted: #A3A3A3;
+    --border: #E5E5E5;
+    --status-pending-bg: #FEF3C7;
+    --status-pending-text: #92400E;
+    --status-pending-border: #FCD34D;
+    --status-approved-bg: #DCFCE7;
+    --status-approved-text: #166534;
+    --status-approved-border: #86EFAC;
+    --status-rejected-bg: #FEE2E2;
+    --status-rejected-text: #991B1B;
+    --status-rejected-border: #FCA5A5;
+    --status-expired-bg: #F5F5F5;
+    --status-expired-text: #525252;
+    --status-expired-border: #D4D4D4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; background: #F0F0F0; color: var(--text-primary); }
+
+  /* NAV */
+  .nav { background: var(--brand-primary); color: white; padding: 16px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .nav h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .nav span { font-size: 13px; opacity: 0.8; }
+  .direction-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding: 0 24px 12px; background: var(--brand-primary); }
+  .tab { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.4); color: white; background: transparent; transition: all 0.2s; }
+  .tab:hover, .tab.active { background: white; color: var(--brand-primary); border-color: white; }
+
+  /* LAYOUT */
+  .showcase { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .direction { display: none; }
+  .direction.visible { display: block; }
+  .direction-header { margin-bottom: 24px; }
+  .direction-header h2 { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+  .direction-header p { font-size: 15px; color: var(--text-secondary); margin-top: 4px; max-width: 600px; }
+  .screens-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+  .screen-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 10px; }
+
+  /* PHONE FRAME */
+  .phone-frame { background: #1A1A1A; border-radius: 40px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1); display: inline-block; width: 100%; max-width: 360px; }
+  .phone-screen { border-radius: 30px; overflow: hidden; background: var(--surface); min-height: 640px; position: relative; }
+  .phone-notch { height: 32px; background: #1A1A1A; border-radius: 0 0 18px 18px; width: 120px; margin: 0 auto; position: relative; z-index: 10; }
+
+  /* WEB FRAME */
+  .web-frame { background: var(--surface-elevated); border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); overflow: hidden; border: 1px solid var(--border); }
+  .web-titlebar { background: #F3F4F6; padding: 10px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+  .web-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .web-url { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--text-muted); flex: 1; max-width: 300px; }
+
+  /* COMMON COMPONENTS */
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; border: 1px solid; }
+  .status-badge.pending { background: var(--status-pending-bg); color: var(--status-pending-text); border-color: var(--status-pending-border); }
+  .status-badge.approved { background: var(--status-approved-bg); color: var(--status-approved-text); border-color: var(--status-approved-border); }
+  .status-badge.rejected { background: var(--status-rejected-bg); color: var(--status-rejected-text); border-color: var(--status-rejected-border); }
+  .status-badge.expired { background: var(--status-expired-bg); color: var(--status-expired-text); border-color: var(--status-expired-border); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--brand-primary); color: white; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
+
+  /* ==================== DIRECTION 1: CALM CARDS ==================== */
+  .d1-screen { background: #FAFAFA; }
+  .d1-header { background: white; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+  .d1-greeting { font-size: 13px; color: var(--text-muted); }
+  .d1-name { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-top: 2px; }
+  .d1-child-tabs { display: flex; gap: 8px; padding: 12px 20px; overflow-x: auto; background: white; border-bottom: 1px solid var(--border); }
+  .d1-child-tab { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .d1-child-tab.active { background: var(--brand-primary); color: white; }
+  .d1-child-tab.inactive { background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); }
+  .d1-section { padding: 16px 20px 0; }
+  .d1-section-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+  .d1-alert-card { background: white; border: 1px solid var(--status-pending-border); border-left: 4px solid #F59E0B; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .d1-alert-vaccine { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .d1-alert-meta { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+  .d1-vaccine-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .d1-vaccine-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--brand-primary-light); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .d1-vaccine-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .d1-vaccine-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .d1-tabbar { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); display: flex; padding: 8px 0 20px; }
+  .d1-tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); }
+  .d1-tab-item.active { color: var(--brand-primary); }
+  .d1-tab-icon { font-size: 20px; }
+
+  /* D1 APPROVAL SCREEN */
+  .d1-approval { background: white; min-height: 640px; display: flex; flex-direction: column; }
+  .d1-approval-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+  .d1-back { font-size: 22px; color: var(--brand-primary); cursor: pointer; }
+  .d1-approval-title { font-size: 16px; font-weight: 600; }
+  .d1-approval-body { padding: 24px 20px; flex: 1; }
+  .d1-approval-child { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .d1-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--brand-primary-light); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .d1-child-name { font-size: 17px; font-weight: 700; }
+  .d1-child-sub { font-size: 13px; color: var(--text-secondary); }
+  .d1-record-card { background: #FAFAFA; border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .d1-record-field { margin-bottom: 16px; }
+  .d1-field-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 4px; }
+  .d1-field-value { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .d1-field-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .d1-approval-footer { padding: 16px 20px 32px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+  .btn-primary { background: var(--brand-primary); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; }
+  .btn-secondary { background: transparent; color: var(--text-secondary); border: 1.5px solid var(--border); border-radius: 12px; padding: 13px; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; }
+
+  /* ==================== DIRECTION 2: TIMELINE FOCUS ==================== */
+  .d2-screen { background: white; }
+  .d2-topbar { background: var(--brand-primary); padding: 48px 20px 20px; color: white; }
+  .d2-topbar-greeting { font-size: 13px; opacity: 0.8; }
+  .d2-topbar-name { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .d2-child-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px; margin-top: 12px; font-size: 14px; font-weight: 500; }
+  .d2-content { padding: 16px 20px; background: white; min-height: 440px; }
+  .d2-pending-banner { background: var(--status-pending-bg); border: 1px solid var(--status-pending-border); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .d2-pending-label { font-size: 13px; color: var(--status-pending-text); font-weight: 600; }
+  .d2-pending-action { font-size: 13px; color: var(--brand-primary); font-weight: 600; }
+  .d2-timeline { position: relative; padding-left: 24px; }
+  .d2-timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .d2-timeline-item { position: relative; margin-bottom: 16px; }
+  .d2-timeline-dot { position: absolute; left: -20px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+  .d2-timeline-dot.approved { border-color: #16a34a; background: #16a34a; }
+  .d2-timeline-dot.upcoming { border-color: var(--brand-primary); background: white; }
+  .d2-timeline-dot.overdue { border-color: #dc2626; background: #dc2626; }
+  .d2-tl-vaccine { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .d2-tl-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .d2-tl-doctor { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  /* ==================== DIRECTION 3: DARK TRUST ==================== */
+  .d3-screen { background: #0F172A; color: white; }
+  .d3-header { padding: 48px 20px 20px; }
+  .d3-greeting { font-size: 13px; color: #94A3B8; }
+  .d3-name { font-size: 22px; font-weight: 700; color: white; margin-top: 2px; }
+  .d3-child-tabs { display: flex; gap: 8px; padding: 0 20px 16px; overflow-x: auto; }
+  .d3-child-tab { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap; border: 1px solid #334155; color: #94A3B8; background: transparent; }
+  .d3-child-tab.active { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
+  .d3-section { padding: 0 20px 16px; }
+  .d3-section-title { font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+  .d3-alert { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
+  .d3-alert-v { font-size: 15px; font-weight: 600; color: white; }
+  .d3-alert-m { font-size: 13px; color: #94A3B8; margin-top: 3px; }
+  .d3-card { background: #1E293B; border: 1px solid #334155; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .d3-card-name { font-size: 14px; font-weight: 500; color: white; }
+  .d3-card-date { font-size: 12px; color: #64748B; margin-top: 3px; }
+  .d3-tabbar { position: absolute; bottom: 0; left: 0; right: 0; background: #1E293B; border-top: 1px solid #334155; display: flex; padding: 8px 0 20px; }
+  .d3-tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: #64748B; }
+  .d3-tab-item.active { color: var(--brand-primary); }
+
+  /* ==================== DIRECTION 4: MINIMAL WHITE ==================== */
+  .d4-screen { background: white; }
+  .d4-header { padding: 48px 24px 24px; border-bottom: 1px solid #F5F5F5; }
+  .d4-brand { font-size: 13px; font-weight: 700; color: var(--brand-primary); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .d4-name { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+  .d4-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+  .d4-section { padding: 20px 24px 0; }
+  .d4-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .d4-row { padding: 14px 0; border-bottom: 1px solid #F5F5F5; display: flex; align-items: center; justify-content: space-between; }
+  .d4-row:last-child { border-bottom: none; }
+  .d4-row-left { flex: 1; }
+  .d4-row-vaccine { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .d4-row-date { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .d4-pending-card { background: #FFFBEB; border-radius: 16px; padding: 16px 20px; margin: 0 24px 20px; }
+  .d4-pending-label { font-size: 12px; font-weight: 700; color: #92400E; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .d4-pending-v { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .d4-pending-m { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .d4-pending-btn { margin-top: 12px; background: var(--brand-primary); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  /* ==================== DIRECTION 5: DOCTOR PORTAL WEB ==================== */
+  .d5-layout { display: flex; min-height: 500px; }
+  .d5-sidebar { width: 220px; background: #0F172A; color: white; padding: 20px 0; flex-shrink: 0; }
+  .d5-sidebar-brand { padding: 0 20px 20px; border-bottom: 1px solid #1E293B; }
+  .d5-sidebar-logo { font-size: 16px; font-weight: 700; color: var(--brand-primary); }
+  .d5-sidebar-role { font-size: 11px; color: #64748B; margin-top: 2px; }
+  .d5-nav { padding: 12px 0; }
+  .d5-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; color: #94A3B8; cursor: pointer; }
+  .d5-nav-item.active { color: white; background: rgba(255,255,255,0.05); border-right: 2px solid var(--brand-primary); }
+  .d5-nav-icon { font-size: 16px; }
+  .d5-main { flex: 1; background: #F8FAFC; overflow: hidden; }
+  .d5-topbar { background: white; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .d5-page-title { font-size: 18px; font-weight: 700; }
+  .d5-search { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); width: 200px; }
+  .d5-content { padding: 20px 24px; }
+  .d5-patient-row { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: box-shadow 0.15s; }
+  .d5-patient-row:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .d5-patient-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--brand-primary-light); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--brand-primary); font-size: 14px; flex-shrink: 0; }
+  .d5-patient-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .d5-patient-id { font-size: 12px; color: var(--text-muted); font-family: monospace; margin-top: 2px; }
+  .d5-patient-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .d5-next-due { font-size: 12px; color: var(--text-secondary); }
+
+  /* ==================== DIRECTION 6: CARD ELEVATION ==================== */
+  .d6-screen { background: #F0F4F8; }
+  .d6-header { background: linear-gradient(135deg, #0F766E 0%, #0369A1 100%); padding: 48px 20px 60px; color: white; }
+  .d6-greeting { font-size: 13px; opacity: 0.85; }
+  .d6-name { font-size: 21px; font-weight: 700; margin-top: 3px; }
+  .d6-content { padding: 0 16px; margin-top: -32px; }
+  .d6-urgent-card { background: white; border-radius: 16px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 16px; border-left: 5px solid #F59E0B; }
+  .d6-urgent-label { font-size: 11px; font-weight: 700; color: #92400E; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .d6-urgent-vaccine { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .d6-urgent-child { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+  .d6-urgent-btn { margin-top: 14px; background: var(--brand-primary); color: white; border: none; border-radius: 10px; padding: 11px 20px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; }
+  .d6-section-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; }
+  .d6-vcard { background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .d6-vcard-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--brand-primary-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .d6-vcard-name { font-size: 14px; font-weight: 600; }
+  .d6-vcard-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* QR Card */
+  .qr-showcase { background: white; border-radius: 20px; padding: 28px 24px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .qr-child-name { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .qr-child-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  .qr-placeholder { width: 160px; height: 160px; background: var(--text-primary); border-radius: 12px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .qr-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; width: 140px; }
+  .qr-cell { aspect-ratio: 1; border-radius: 1px; }
+  .qr-code-text { font-size: 22px; font-weight: 800; letter-spacing: 6px; color: var(--text-primary); font-family: monospace; margin-bottom: 6px; }
+  .qr-share-btn { background: var(--brand-primary); color: white; border: none; border-radius: 12px; padding: 13px 32px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 12px; }
+  .qr-brand { font-size: 11px; color: var(--text-muted); margin-top: 12px; }
+
+  /* Approval confirmation state */
+  .confirm-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 32px; text-align: center; flex: 1; }
+  .confirm-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--status-approved-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 36px; border: 3px solid var(--status-approved-border); }
+  .confirm-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+  .confirm-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+  .confirm-record { background: var(--status-approved-bg); border: 1px solid var(--status-approved-border); border-radius: 12px; padding: 14px 16px; margin-top: 20px; width: 100%; text-align: left; }
+  .confirm-record-label { font-size: 11px; font-weight: 700; color: var(--status-approved-text); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .confirm-record-v { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .confirm-record-m { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+  .compare-note { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-top: 24px; }
+  .compare-note h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .compare-note p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div>
+    <h1>vital-track — UX Design Directions</h1>
+    <span>6 visual directions to explore · Click tabs to switch</span>
+  </div>
+</div>
+<div class="direction-tabs">
+  <button class="tab active" onclick="showDirection(1, this)">1 · Calm Cards</button>
+  <button class="tab" onclick="showDirection(2, this)">2 · Timeline Focus</button>
+  <button class="tab" onclick="showDirection(3, this)">3 · Dark Trust</button>
+  <button class="tab" onclick="showDirection(4, this)">4 · Minimal White</button>
+  <button class="tab" onclick="showDirection(5, this)">5 · Doctor Portal</button>
+  <button class="tab" onclick="showDirection(6, this)">6 · Card Elevation</button>
+</div>
+
+<div class="showcase">
+
+  <!-- ==================== DIRECTION 1 ==================== -->
+  <div class="direction visible" id="dir-1">
+    <div class="direction-header">
+      <h2>Direction 1 — Calm Cards</h2>
+      <p>Clean white foundation, card-per-vaccine, bottom tab navigation. Familiar and low-friction. Inspired by banking apps like Monzo. High trust, minimal visual noise.</p>
+    </div>
+    <div class="screens-grid">
+
+      <!-- Parent Home -->
+      <div>
+        <div class="screen-label">📱 Parent Home — Vaccination Overview</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen d1-screen" style="min-height:620px; position:relative;">
+            <div class="d1-header">
+              <div class="d1-greeting">Good morning,</div>
+              <div class="d1-name">Priya 👋</div>
+            </div>
+            <div class="d1-child-tabs">
+              <div class="d1-child-tab active">Maya, 14mo</div>
+              <div class="d1-child-tab inactive">Arjun, 4yr</div>
+              <div class="d1-child-tab inactive">+ Add child</div>
+            </div>
+            <div class="d1-section">
+              <div class="d1-section-title">⚠️ Action needed</div>
+              <div class="d1-alert-card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <div>
+                    <div class="d1-alert-vaccine">Hepatitis B — Dose 2</div>
+                    <div class="d1-alert-meta">Dr. Arora marked as administered · Today</div>
+                  </div>
+                  <span class="status-badge pending"><span class="status-dot"></span>Pending</span>
+                </div>
+                <button style="margin-top:12px; background:var(--brand-primary); color:white; border:none; border-radius:8px; padding:9px 18px; font-size:14px; font-weight:600; cursor:pointer;">Review & Confirm</button>
+              </div>
+            </div>
+            <div class="d1-section">
+              <div class="d1-section-title">📅 Upcoming · Maya</div>
+              <div class="d1-vaccine-card">
+                <div class="d1-vaccine-icon">💉</div>
+                <div>
+                  <div class="d1-vaccine-name">MMR — Dose 1</div>
+                  <div class="d1-vaccine-date">Due in 3 weeks · 24 Apr 2026</div>
+                </div>
+                <span class="status-badge" style="background:#EFF6FF; color:#1D4ED8; border-color:#BFDBFE; margin-left:auto; font-size:11px;">Soon</span>
+              </div>
+              <div class="d1-vaccine-card">
+                <div class="d1-vaccine-icon">💉</div>
+                <div>
+                  <div class="d1-vaccine-name">Varicella — Dose 1</div>
+                  <div class="d1-vaccine-date">Due in 6 weeks · 14 May 2026</div>
+                </div>
+              </div>
+            </div>
+            <div class="d1-section" style="padding-bottom:80px;">
+              <div class="d1-section-title">✅ Recent · Confirmed</div>
+              <div class="d1-vaccine-card">
+                <div class="d1-vaccine-icon">✅</div>
+                <div>
+                  <div class="d1-vaccine-name">DTaP — Dose 3</div>
+                  <div class="d1-vaccine-date">Confirmed 12 Mar 2026 · Dr. Arora</div>
+                </div>
+                <span class="status-badge approved" style="margin-left:auto;"><span class="status-dot"></span>Done</span>
+              </div>
+            </div>
+            <div class="d1-tabbar">
+              <div class="d1-tab-item active"><div class="d1-tab-icon">🏠</div>Home</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👶</div>Children</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">🔔</div>Alerts</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👤</div>Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parent Approval Screen -->
+      <div>
+        <div class="screen-label">📱 Parent Approval — Confirm Vaccination</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen d1-screen d1-approval">
+            <div class="d1-approval-header">
+              <div class="d1-back">←</div>
+              <div class="d1-approval-title">Review Vaccination</div>
+            </div>
+            <div class="d1-approval-body">
+              <div class="d1-approval-child">
+                <div class="d1-avatar">👶</div>
+                <div>
+                  <div class="d1-child-name">Maya</div>
+                  <div class="d1-child-sub">14 months · ChildID: A4X9K2</div>
+                </div>
+                <span class="status-badge pending" style="margin-left:auto;"><span class="status-dot"></span>Pending</span>
+              </div>
+              <div class="d1-record-card">
+                <div class="d1-record-field">
+                  <div class="d1-field-label">Vaccine</div>
+                  <div class="d1-field-value">Hepatitis B — Dose 2</div>
+                  <div class="d1-field-sub">Hepatitis B protects against liver infection</div>
+                </div>
+                <div class="d1-record-field">
+                  <div class="d1-field-label">Administered by</div>
+                  <div class="d1-field-value" style="display:flex; align-items:center; gap:8px;">Dr. Priya Arora <span class="verified-badge">✓ Verified</span></div>
+                  <div class="d1-field-sub">Sunshine Pediatrics · Today, 10:32am</div>
+                </div>
+                <div class="d1-record-field">
+                  <div class="d1-field-label">Lot Number</div>
+                  <div class="d1-field-value" style="font-family:monospace;">HB-2026-04-771A</div>
+                </div>
+                <div style="margin-top:4px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted);">Once confirmed, this record is permanent and cannot be modified.</div>
+              </div>
+            </div>
+            <div class="d1-approval-footer">
+              <button class="btn-primary">✓ Confirm Vaccination</button>
+              <button class="btn-secondary">Question This Record</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval Confirmation State -->
+      <div>
+        <div class="screen-label">📱 Confirmation — Record Permanent</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:white; display:flex; flex-direction:column; min-height:620px;">
+            <div class="confirm-state">
+              <div class="confirm-icon">✓</div>
+              <div class="confirm-title">Vaccination Confirmed</div>
+              <div class="confirm-sub">This record is now permanently part of Maya's health history. Only you could approve this.</div>
+              <div class="confirm-record">
+                <div class="confirm-record-label">✓ Permanent Record</div>
+                <div class="confirm-record-v">Hepatitis B — Dose 2</div>
+                <div class="confirm-record-m">Dr. Priya Arora · 3 Apr 2026 · Sunshine Pediatrics</div>
+              </div>
+            </div>
+            <div style="padding: 0 20px 32px;">
+              <button class="btn-primary">Back to Maya's Record</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="compare-note">
+      <h4>Direction 1 strengths</h4>
+      <p>Lowest learning curve — parents recognise this pattern from banking apps. Clear information hierarchy per card. The approval screen shows maximum context before the action. Works excellently offline (cards render from cached data). Best for: trust-first, high-clarity use cases.</p>
+    </div>
+  </div>
+
+  <!-- ==================== DIRECTION 2 ==================== -->
+  <div class="direction" id="dir-2">
+    <div class="direction-header">
+      <h2>Direction 2 — Timeline Focus</h2>
+      <p>The vaccination journey as a visual timeline is the hero of this direction. Teal header, timeline-anchored content, pending banner at top. Makes the "full record" feel tangible and reassuring.</p>
+    </div>
+    <div class="screens-grid">
+
+      <!-- Parent Timeline -->
+      <div>
+        <div class="screen-label">📱 Parent Home — Timeline View</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen d2-screen" style="min-height:620px; position:relative;">
+            <div class="d2-topbar">
+              <div class="d2-topbar-greeting">Vaccination record for</div>
+              <div class="d2-topbar-name">Maya, 14 months</div>
+              <div class="d2-child-pill">👶 Maya <span style="opacity:0.6; margin:0 4px;">·</span> 👦 Arjun</div>
+            </div>
+            <div class="d2-content">
+              <div class="d2-pending-banner">
+                <div>
+                  <div class="d2-pending-label">🔔 1 approval needed</div>
+                  <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">Hepatitis B Dose 2 · Today</div>
+                </div>
+                <div class="d2-pending-action">Review →</div>
+              </div>
+              <div class="d2-timeline">
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot upcoming"></div>
+                  <div class="d2-tl-vaccine">MMR — Dose 1</div>
+                  <div class="d2-tl-date">Due 24 Apr 2026 · in 3 weeks</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot upcoming"></div>
+                  <div class="d2-tl-vaccine">Varicella — Dose 1</div>
+                  <div class="d2-tl-date">Due 14 May 2026 · in 6 weeks</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">DTaP — Dose 3</div>
+                  <div class="d2-tl-date">12 Mar 2026 · Confirmed</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">Hib — Dose 3</div>
+                  <div class="d2-tl-date">12 Mar 2026 · Confirmed</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">Hepatitis B — Dose 1</div>
+                  <div class="d2-tl-date">2 Jan 2025 · Confirmed</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+              </div>
+            </div>
+            <div class="d1-tabbar">
+              <div class="d1-tab-item active"><div class="d1-tab-icon">📋</div>Record</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👶</div>Children</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">🔔</div>Alerts</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👤</div>Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ChildID QR Card -->
+      <div>
+        <div class="screen-label">📱 ChildID Share — QR Card</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:#FAFAFA; min-height:620px; display:flex; flex-direction:column; padding:24px 20px;">
+            <div style="font-size:16px; font-weight:700; margin-bottom:4px;">Share Maya's Record</div>
+            <div style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Show this to any verified doctor for instant access</div>
+            <div class="qr-showcase">
+              <div class="qr-child-name">Maya</div>
+              <div class="qr-child-sub">Born Jan 2025 · vital-track</div>
+              <div class="qr-placeholder">
+                <!-- Simulated QR code pattern -->
+                <svg width="140" height="140" viewBox="0 0 140 140" fill="white" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="16" y="16" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="22" y="22" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="90" y="10" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="96" y="16" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="102" y="22" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="10" y="90" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="16" y="96" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="22" y="102" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="60" y="10" width="8" height="8" fill="white"/>
+                  <rect x="72" y="10" width="8" height="8" fill="white"/>
+                  <rect x="60" y="22" width="8" height="8" fill="white"/>
+                  <rect x="60" y="60" width="8" height="8" fill="white"/>
+                  <rect x="72" y="60" width="8" height="8" fill="white"/>
+                  <rect x="84" y="60" width="8" height="8" fill="white"/>
+                  <rect x="60" y="72" width="8" height="8" fill="white"/>
+                  <rect x="84" y="72" width="8" height="8" fill="white"/>
+                  <rect x="60" y="84" width="8" height="8" fill="white"/>
+                  <rect x="72" y="84" width="8" height="8" fill="white"/>
+                  <rect x="96" y="60" width="8" height="8" fill="white"/>
+                  <rect x="108" y="60" width="8" height="8" fill="white"/>
+                  <rect x="120" y="60" width="8" height="8" fill="white"/>
+                  <rect x="96" y="72" width="8" height="8" fill="white"/>
+                  <rect x="120" y="72" width="8" height="8" fill="white"/>
+                  <rect x="96" y="84" width="8" height="8" fill="white"/>
+                  <rect x="108" y="84" width="8" height="8" fill="white"/>
+                  <rect x="96" y="96" width="8" height="8" fill="white"/>
+                  <rect x="120" y="96" width="8" height="8" fill="white"/>
+                  <rect x="96" y="108" width="8" height="8" fill="white"/>
+                  <rect x="108" y="108" width="8" height="8" fill="white"/>
+                </svg>
+              </div>
+              <div class="qr-code-text">A4X9K2</div>
+              <div style="font-size:12px; color:var(--text-muted);">Expires in 4 hours · Tap to refresh</div>
+              <button class="qr-share-btn">📤 Share QR Card</button>
+              <div class="qr-brand">Powered by vital-track · HIPAA Compliant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor QR Landing -->
+      <div>
+        <div class="screen-label">📱 Doctor — QR Scan Result (Urgent Care)</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:white; min-height:620px; position:relative;">
+            <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-size:15px; font-weight:700;">Patient Record</div>
+              <div style="font-size:12px; color:var(--text-muted);">Read-only · via QR</div>
+            </div>
+            <div style="padding:20px;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+                <div class="d1-avatar">👶</div>
+                <div>
+                  <div style="font-size:17px; font-weight:700;">Maya</div>
+                  <div style="font-size:13px; color:var(--text-muted);">14 months · A4X9K2</div>
+                </div>
+              </div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px;">Vaccination History</div>
+              <div class="d2-timeline">
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot upcoming" style="border-color:#F59E0B; background:#F59E0B;"></div>
+                  <div class="d2-tl-vaccine">MMR — Dose 1</div>
+                  <div class="d2-tl-date" style="color:#B45309;">Overdue · was due 3 weeks ago</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">Hepatitis B — Dose 2</div>
+                  <div class="d2-tl-date">Confirmed 3 Apr 2026</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">DTaP — Dose 3</div>
+                  <div class="d2-tl-date">Confirmed 12 Mar 2026</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+                <div class="d2-timeline-item">
+                  <div class="d2-timeline-dot approved"></div>
+                  <div class="d2-tl-vaccine">MenB — Dose 2</div>
+                  <div class="d2-tl-date">Confirmed 2 Jan 2026</div>
+                  <div class="d2-tl-doctor">Dr. Arora · Sunshine Pediatrics</div>
+                </div>
+              </div>
+            </div>
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:16px 20px 32px; border-top:1px solid var(--border); background:white;">
+              <button class="btn-primary" style="margin-bottom:8px;">+ Record Administration</button>
+              <div style="font-size:11px; color:var(--text-muted); text-align:center;">Powered by vital-track · Access expires in 3h 52m</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="compare-note">
+      <h4>Direction 2 strengths</h4>
+      <p>The timeline is the product's emotional heart — a parent seeing their child's full vaccination journey laid out chronologically for the first time is vital-track's core "aha" moment. This direction leads with that. The teal header creates brand identity without complex design work. Best for: parents who want to feel "I can see everything at once."</p>
+    </div>
+  </div>
+
+  <!-- ==================== DIRECTION 3 ==================== -->
+  <div class="direction" id="dir-3">
+    <div class="direction-header">
+      <h2>Direction 3 — Dark Trust</h2>
+      <p>Dark mode as a trust signal. Deep navy background with teal accents reads as premium and serious — the visual language of security and authority. Bold choice that stands out in the health app space.</p>
+    </div>
+    <div class="screens-grid">
+      <div>
+        <div class="screen-label">📱 Parent Home — Dark Mode</div>
+        <div class="phone-frame">
+          <div class="phone-notch" style="background:#1A1A1A;"></div>
+          <div class="phone-screen d3-screen" style="min-height:620px; position:relative;">
+            <div class="d3-header">
+              <div class="d3-greeting">Good morning,</div>
+              <div class="d3-name">Priya</div>
+            </div>
+            <div class="d3-child-tabs">
+              <div class="d3-child-tab active">Maya</div>
+              <div class="d3-child-tab">Arjun</div>
+            </div>
+            <div class="d3-section">
+              <div class="d3-section-title">Action needed</div>
+              <div class="d3-alert">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <div>
+                    <div class="d3-alert-v">Hepatitis B — Dose 2</div>
+                    <div class="d3-alert-m">Dr. Arora · Today · Pending approval</div>
+                  </div>
+                  <span class="status-badge pending"><span class="status-dot"></span>Pending</span>
+                </div>
+                <button style="margin-top:12px; background:var(--brand-primary); color:white; border:none; border-radius:8px; padding:9px 18px; font-size:14px; font-weight:600; cursor:pointer; width:100%;">Review & Confirm</button>
+              </div>
+            </div>
+            <div class="d3-section">
+              <div class="d3-section-title">Upcoming vaccinations</div>
+              <div class="d3-card">
+                <div>
+                  <div class="d3-card-name">MMR — Dose 1</div>
+                  <div class="d3-card-date">Due 24 Apr 2026</div>
+                </div>
+                <span style="font-size:12px; color:#38BDF8; font-weight:600;">3 weeks</span>
+              </div>
+              <div class="d3-card">
+                <div>
+                  <div class="d3-card-name">Varicella — Dose 1</div>
+                  <div class="d3-card-date">Due 14 May 2026</div>
+                </div>
+                <span style="font-size:12px; color:#94A3B8;">6 weeks</span>
+              </div>
+            </div>
+            <div class="d3-section">
+              <div class="d3-section-title">Confirmed</div>
+              <div class="d3-card">
+                <div>
+                  <div class="d3-card-name">DTaP — Dose 3</div>
+                  <div class="d3-card-date">12 Mar 2026</div>
+                </div>
+                <span class="status-badge approved"><span class="status-dot"></span>Done</span>
+              </div>
+            </div>
+            <div class="d3-tabbar">
+              <div class="d3-tab-item active"><div class="d1-tab-icon">🏠</div>Home</div>
+              <div class="d3-tab-item"><div class="d1-tab-icon">👶</div>Children</div>
+              <div class="d3-tab-item"><div class="d1-tab-icon">🔔</div>Alerts</div>
+              <div class="d3-tab-item"><div class="d1-tab-icon">👤</div>Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="screen-label">📱 Doctor Portal — Dark (Mobile)</div>
+        <div class="phone-frame">
+          <div class="phone-notch" style="background:#1A1A1A;"></div>
+          <div class="phone-screen d3-screen" style="min-height:620px; position:relative;">
+            <div class="d3-header" style="padding-bottom:12px;">
+              <div class="d3-greeting">Doctor portal</div>
+              <div class="d3-name">Dr. Sarah Chen</div>
+              <div style="margin-top:8px; display:inline-flex; align-items:center; gap:6px; background:#0F766E20; border:1px solid #0F766E60; border-radius:20px; padding:4px 12px;">
+                <span style="color:#0F766E; font-size:12px; font-weight:700;">✓ Verified Physician</span>
+              </div>
+            </div>
+            <div style="padding:12px 20px; background:#1E293B; border-bottom:1px solid #334155; display:flex; align-items:center; gap:10px;">
+              <div style="flex:1; background:#0F172A; border:1px solid #334155; border-radius:8px; padding:8px 12px; font-size:13px; color:#64748B;">🔍 Search patient or scan QR</div>
+              <div style="background:var(--brand-primary); width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;">📷</div>
+            </div>
+            <div class="d3-section" style="padding-top:16px;">
+              <div class="d3-section-title">Recent patients</div>
+              <div class="d3-card" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <div style="display:flex; align-items:center; gap:10px; width:100%;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:#1E3A5F; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#38BDF8;">M</div>
+                  <div>
+                    <div class="d3-card-name">Maya</div>
+                    <div class="d3-card-date">A4X9K2 · 14 months</div>
+                  </div>
+                  <span class="status-badge pending" style="margin-left:auto;"><span class="status-dot"></span>1 pending</span>
+                </div>
+              </div>
+              <div class="d3-card">
+                <div style="width:32px; height:32px; border-radius:50%; background:#1A3A2A; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#4ADE80;">L</div>
+                <div>
+                  <div class="d3-card-name">Liam</div>
+                  <div class="d3-card-date">KP3M7X · 4 months</div>
+                </div>
+                <span class="status-badge approved" style="margin-left:auto;"><span class="status-dot"></span>All current</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="compare-note" style="margin-top:0;">
+          <h4>Direction 3 strengths</h4>
+          <p>Dark mode creates a strong brand differentiator — no competing health app uses dark mode as its primary mode. Reads as premium, secure, and serious. The teal accents pop beautifully against the navy. Could particularly resonate with parents who are more tech-savvy or who use their phone in low-light conditions (night feeds, bedtime). Risk: may feel clinical or cold for some users. Could be offered as an optional dark mode toggle rather than default.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DIRECTION 4 ==================== -->
+  <div class="direction" id="dir-4">
+    <div class="direction-header">
+      <h2>Direction 4 — Minimal White</h2>
+      <p>Ultra-clean, list-based, maximum whitespace. Inspired by Linear and Notion. Every element earns its place. Optimised for experienced, confident users who want clarity without decoration.</p>
+    </div>
+    <div class="screens-grid">
+      <div>
+        <div class="screen-label">📱 Parent Home — Minimal</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen d4-screen" style="min-height:620px; position:relative; background:white;">
+            <div class="d4-header">
+              <div class="d4-brand">vital-track</div>
+              <div class="d4-name">Priya's children</div>
+              <div class="d4-sub">2 active profiles</div>
+            </div>
+            <div style="padding:16px 24px; background:var(--status-pending-bg); border-bottom:1px solid var(--status-pending-border);">
+              <div style="font-size:12px; font-weight:700; color:var(--status-pending-text); text-transform:uppercase; letter-spacing:0.6px;">1 approval needed</div>
+              <div style="font-size:14px; font-weight:600; color:var(--text-primary); margin-top:4px;">Hepatitis B Dose 2 — Maya</div>
+              <button style="margin-top:10px; font-size:13px; font-weight:700; color:var(--brand-primary); background:none; border:none; cursor:pointer; padding:0;">Review now →</button>
+            </div>
+            <div class="d4-section">
+              <div class="d4-section-title">Maya · 14 months</div>
+              <div class="d4-row">
+                <div class="d4-row-left">
+                  <div class="d4-row-vaccine">MMR — Dose 1</div>
+                  <div class="d4-row-date">Due 24 Apr · 3 weeks</div>
+                </div>
+                <span style="font-size:12px; color:#1D4ED8; font-weight:600; background:#EFF6FF; padding:3px 10px; border-radius:100px;">Upcoming</span>
+              </div>
+              <div class="d4-row">
+                <div class="d4-row-left">
+                  <div class="d4-row-vaccine">Varicella — Dose 1</div>
+                  <div class="d4-row-date">Due 14 May · 6 weeks</div>
+                </div>
+              </div>
+              <div class="d4-row">
+                <div class="d4-row-left">
+                  <div class="d4-row-vaccine">DTaP — Dose 3</div>
+                  <div class="d4-row-date">Confirmed 12 Mar 2026</div>
+                </div>
+                <span class="status-badge approved"><span class="status-dot"></span>Done</span>
+              </div>
+            </div>
+            <div class="d4-section">
+              <div class="d4-section-title">Arjun · 4 years</div>
+              <div class="d4-row">
+                <div class="d4-row-left">
+                  <div class="d4-row-vaccine">Influenza · Annual</div>
+                  <div class="d4-row-date">Due Oct 2026</div>
+                </div>
+              </div>
+              <div class="d4-row">
+                <div class="d4-row-left">
+                  <div class="d4-row-vaccine">MMR — Dose 2</div>
+                  <div class="d4-row-date">Confirmed 5 Feb 2026</div>
+                </div>
+                <span class="status-badge approved"><span class="status-dot"></span>Done</span>
+              </div>
+            </div>
+            <div class="d1-tabbar">
+              <div class="d1-tab-item active"><div class="d1-tab-icon">📋</div>Records</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">🔔</div>Alerts</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">📤</div>Share</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👤</div>Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="screen-label">📱 Parent Approval — Minimal</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:white; min-height:620px; position:relative; display:flex; flex-direction:column;">
+            <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;">
+              <div style="font-size:20px; color:var(--brand-primary);">←</div>
+              <div style="font-size:15px; font-weight:700;">Vaccination record</div>
+            </div>
+            <div style="padding:24px 24px; flex:1;">
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px;">Patient</div>
+              <div style="font-size:17px; font-weight:700; margin-bottom:20px;">Maya · A4X9K2</div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px;">Vaccine</div>
+              <div style="font-size:20px; font-weight:700; margin-bottom:4px;">Hepatitis B</div>
+              <div style="font-size:14px; color:var(--text-secondary); margin-bottom:20px;">Dose 2 of 3 · Protects against liver infection</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; background:var(--surface); border-radius:12px; padding:16px; margin-bottom:20px;">
+                <div>
+                  <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Administered by</div>
+                  <div style="font-size:13px; font-weight:600;">Dr. Arora</div>
+                  <div class="verified-badge" style="margin-top:4px; width:fit-content;">✓ Verified</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Date</div>
+                  <div style="font-size:13px; font-weight:600;">3 Apr 2026</div>
+                  <div style="font-size:12px; color:var(--text-muted);">Today, 10:32am</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Lot number</div>
+                  <div style="font-size:13px; font-weight:600; font-family:monospace;">HB-2026-771A</div>
+                </div>
+                <div>
+                  <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Clinic</div>
+                  <div style="font-size:13px; font-weight:600;">Sunshine Pediatrics</div>
+                </div>
+              </div>
+              <span class="status-badge pending"><span class="status-dot"></span>Awaiting your confirmation</span>
+            </div>
+            <div style="padding:16px 24px 32px; border-top:1px solid var(--border);">
+              <button class="btn-primary" style="margin-bottom:10px;">✓ Confirm this vaccination</button>
+              <button class="btn-secondary" style="font-size:14px;">I have a question about this</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="compare-note" style="margin-top:0;">
+          <h4>Direction 4 strengths</h4>
+          <p>Maximum information density with minimum visual noise. The list-based layout is extremely familiar (every iOS Settings-style app uses it) and requires zero learning curve. Works beautifully with i18n — long translated strings don't break the layout. The approval screen's data grid gives parents all context without feeling overwhelming. Best for: users who want to feel in control and informed. Risk: might feel less warm or distinctive than other directions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DIRECTION 5 ==================== -->
+  <div class="direction" id="dir-5">
+    <div class="direction-header">
+      <h2>Direction 5 — Doctor Portal Web</h2>
+      <p>This direction focuses on the doctor-facing web portal: sidebar navigation, patient panel, and record management. Clinical efficiency as the north star. Doximity-meets-Linear visual language.</p>
+    </div>
+    <div class="screens-grid" style="grid-template-columns: 1fr;">
+      <div>
+        <div class="screen-label">🖥️ Doctor Portal — Patient Panel</div>
+        <div class="web-frame">
+          <div class="web-titlebar">
+            <div class="web-dot" style="background:#FF5F57;"></div>
+            <div class="web-dot" style="background:#FEBC2E;"></div>
+            <div class="web-dot" style="background:#28C840;"></div>
+            <div class="web-url">vital-track.app/doctor/patients</div>
+          </div>
+          <div class="d5-layout">
+            <div class="d5-sidebar">
+              <div class="d5-sidebar-brand">
+                <div class="d5-sidebar-logo">vital-track</div>
+                <div class="d5-sidebar-role">Doctor Portal</div>
+              </div>
+              <div class="d5-nav">
+                <div class="d5-nav-item active"><span class="d5-nav-icon">👥</span> Patients</div>
+                <div class="d5-nav-item"><span class="d5-nav-icon">📷</span> Scan ChildID</div>
+                <div class="d5-nav-item"><span class="d5-nav-icon">📅</span> Plans</div>
+                <div class="d5-nav-item"><span class="d5-nav-icon">🔔</span> Notifications</div>
+                <div class="d5-nav-item" style="margin-top:auto; border-top:1px solid #1E293B; padding-top:12px;"><span class="d5-nav-icon">⚙️</span> Settings</div>
+              </div>
+              <div style="padding:16px 20px; border-top:1px solid #1E293B; margin-top:auto;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:var(--brand-primary); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:white;">S</div>
+                  <div>
+                    <div style="font-size:13px; font-weight:600; color:white;">Dr. Sarah Chen</div>
+                    <div class="verified-badge" style="margin-top:2px;">✓ Verified</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d5-main">
+              <div class="d5-topbar">
+                <div class="d5-page-title">Patients</div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div class="d5-search">🔍 Search patients…</div>
+                  <button style="background:var(--brand-primary); color:white; border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">📷 Scan QR</button>
+                </div>
+              </div>
+              <div class="d5-content">
+                <div style="display:flex; gap:12px; margin-bottom:16px;">
+                  <div style="background:white; border:1px solid var(--border); border-radius:8px; padding:12px 16px; flex:1; text-align:center;">
+                    <div style="font-size:24px; font-weight:700; color:var(--brand-primary);">24</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Active patients</div>
+                  </div>
+                  <div style="background:var(--status-pending-bg); border:1px solid var(--status-pending-border); border-radius:8px; padding:12px 16px; flex:1; text-align:center;">
+                    <div style="font-size:24px; font-weight:700; color:var(--status-pending-text);">3</div>
+                    <div style="font-size:12px; color:var(--status-pending-text);">Pending approvals</div>
+                  </div>
+                  <div style="background:white; border:1px solid var(--border); border-radius:8px; padding:12px 16px; flex:1; text-align:center;">
+                    <div style="font-size:24px; font-weight:700; color:#DC2626;">2</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Overdue vaccines</div>
+                  </div>
+                </div>
+                <div class="d5-patient-row" style="border-left:3px solid #F59E0B;">
+                  <div class="d5-patient-avatar">M</div>
+                  <div>
+                    <div class="d5-patient-name">Maya</div>
+                    <div class="d5-patient-id">A4X9K2 · 14 months</div>
+                  </div>
+                  <div class="d5-patient-right">
+                    <span class="status-badge pending"><span class="status-dot"></span>1 pending</span>
+                    <div class="d5-next-due">Next: MMR Apr 24</div>
+                    <span style="color:var(--text-muted);">›</span>
+                  </div>
+                </div>
+                <div class="d5-patient-row">
+                  <div class="d5-patient-avatar" style="background:#EEF2FF; color:#4F46E5;">L</div>
+                  <div>
+                    <div class="d5-patient-name">Liam</div>
+                    <div class="d5-patient-id">KP3M7X · 4 months</div>
+                  </div>
+                  <div class="d5-patient-right">
+                    <span class="status-badge approved"><span class="status-dot"></span>Up to date</span>
+                    <div class="d5-next-due">Next: Hib Jun 10</div>
+                    <span style="color:var(--text-muted);">›</span>
+                  </div>
+                </div>
+                <div class="d5-patient-row">
+                  <div class="d5-patient-avatar" style="background:#FFF7ED; color:#C2410C;">A</div>
+                  <div>
+                    <div class="d5-patient-name">Aisha</div>
+                    <div class="d5-patient-id">RX77ZB · 18 months</div>
+                  </div>
+                  <div class="d5-patient-right">
+                    <span class="status-badge" style="background:#FEE2E2; color:#991B1B; border-color:#FCA5A5;"><span class="status-dot"></span>Overdue</span>
+                    <div class="d5-next-due" style="color:#DC2626;">MMR 21 days late</div>
+                    <span style="color:var(--text-muted);">›</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="screen-label">🖥️ Doctor Portal — Record a Vaccination</div>
+        <div class="web-frame" style="max-width:600px;">
+          <div class="web-titlebar">
+            <div class="web-dot" style="background:#FF5F57;"></div>
+            <div class="web-dot" style="background:#FEBC2E;"></div>
+            <div class="web-dot" style="background:#28C840;"></div>
+            <div class="web-url">vital-track.app/doctor/record</div>
+          </div>
+          <div style="padding:24px; background:white;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+              <div class="d5-patient-avatar" style="width:44px; height:44px; font-size:16px;">M</div>
+              <div>
+                <div style="font-size:16px; font-weight:700;">Record administration for Maya</div>
+                <div style="font-size:13px; color:var(--text-muted);">A4X9K2 · 14 months · Sunshine Pediatrics</div>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div>
+                <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Vaccine</label>
+                <select style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--text-primary); background:white;">
+                  <option>Hepatitis B — Dose 2</option>
+                </select>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div>
+                  <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Date administered</label>
+                  <input type="text" value="Apr 3, 2026" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--text-primary);">
+                </div>
+                <div>
+                  <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Lot number <span style="color:#DC2626;">*</span></label>
+                  <input type="text" value="HB-2026-04-771A" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--text-primary); font-family:monospace;">
+                </div>
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Notes (optional)</label>
+                <textarea style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--text-muted); height:70px; resize:none;">No adverse reactions observed.</textarea>
+              </div>
+              <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:13px; color:var(--text-secondary); display:flex; gap:10px; align-items:flex-start;">
+                <span>ℹ️</span>
+                <span>Submitting will notify Maya's parent via push, email, and SMS to approve this record. The record will not be finalised until approval is received.</span>
+              </div>
+              <button class="btn-primary">Submit for Parent Approval →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-note">
+        <h4>Direction 5 strengths</h4>
+        <p>This is purpose-built for doctors — clinical efficiency, data density, fast patient lookup, clear stats at a glance. The sidebar navigation mirrors what doctors already use in EMR systems. The patient row design surfaces pending approvals and overdue vaccines without requiring drill-down. The record form is minimal but covers all required fields (vaccine, date, lot number) with the consent notice built in. Best for: the doctor portal specifically — this direction would be combined with one of the mobile directions for the parent app.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DIRECTION 6 ==================== -->
+  <div class="direction" id="dir-6">
+    <div class="direction-header">
+      <h2>Direction 6 — Card Elevation</h2>
+      <p>Layered depth using card shadows and a gradient hero header. Creates a sense of visual richness and premium quality. The most "app-like" of the directions — closer to consumer health apps but elevated.</p>
+    </div>
+    <div class="screens-grid">
+      <div>
+        <div class="screen-label">📱 Parent Home — Elevated Cards</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen d6-screen" style="min-height:620px; position:relative; overflow-y:auto;">
+            <div class="d6-header">
+              <div class="d6-greeting">Good morning,</div>
+              <div class="d6-name">Priya 👋</div>
+            </div>
+            <div class="d6-content">
+              <div class="d6-urgent-card">
+                <div class="d6-urgent-label">🔔 Action needed</div>
+                <div class="d6-urgent-vaccine">Hepatitis B — Dose 2</div>
+                <div class="d6-urgent-child">Dr. Arora marked as administered · Maya · Today</div>
+                <button class="d6-urgent-btn">Review & Confirm</button>
+              </div>
+              <div class="d6-section-title">Maya · Upcoming</div>
+              <div class="d6-vcard">
+                <div class="d6-vcard-icon">💉</div>
+                <div>
+                  <div class="d6-vcard-name">MMR — Dose 1</div>
+                  <div class="d6-vcard-date">Due 24 Apr 2026 · 3 weeks</div>
+                </div>
+                <span style="font-size:12px; color:#1D4ED8; font-weight:600; margin-left:auto; background:#EFF6FF; padding:3px 10px; border-radius:100px;">Soon</span>
+              </div>
+              <div class="d6-vcard">
+                <div class="d6-vcard-icon">💉</div>
+                <div>
+                  <div class="d6-vcard-name">Varicella — Dose 1</div>
+                  <div class="d6-vcard-date">Due 14 May 2026 · 6 weeks</div>
+                </div>
+              </div>
+              <div class="d6-section-title" style="margin-top:8px;">Arjun · Upcoming</div>
+              <div class="d6-vcard">
+                <div class="d6-vcard-icon">💉</div>
+                <div>
+                  <div class="d6-vcard-name">Influenza · Annual</div>
+                  <div class="d6-vcard-date">Due Oct 2026</div>
+                </div>
+              </div>
+            </div>
+            <div class="d1-tabbar" style="background:white; box-shadow:0 -4px 12px rgba(0,0,0,0.08);">
+              <div class="d1-tab-item active"><div class="d1-tab-icon">🏠</div>Home</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👶</div>Children</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">🔔</div>Alerts</div>
+              <div class="d1-tab-item"><div class="d1-tab-icon">👤</div>Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="screen-label">📱 ChildID Card — Direction 6</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:linear-gradient(135deg,#0F766E,#0369A1); min-height:620px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; position:relative;">
+            <div style="color:white; font-size:13px; opacity:0.8; margin-bottom:4px; align-self:flex-start;">Maya's ChildID</div>
+            <div style="background:white; border-radius:24px; padding:28px 24px; width:100%; text-align:center; box-shadow:0 16px 48px rgba(0,0,0,0.3);">
+              <div style="font-size:20px; font-weight:800; color:var(--text-primary); margin-bottom:2px;">Maya</div>
+              <div style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">14 months · Born Jan 2025</div>
+              <div style="width:160px; height:160px; background:var(--text-primary); border-radius:16px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;">
+                <svg width="140" height="140" viewBox="0 0 140 140" fill="white" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="16" y="16" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="22" y="22" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="90" y="10" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="96" y="16" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="102" y="22" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="10" y="90" width="40" height="40" rx="4" fill="white"/>
+                  <rect x="16" y="96" width="28" height="28" rx="2" fill="#0F172A"/>
+                  <rect x="22" y="102" width="16" height="16" rx="1" fill="white"/>
+                  <rect x="60" y="10" width="8" height="8" fill="white"/>
+                  <rect x="72" y="22" width="8" height="8" fill="white"/>
+                  <rect x="60" y="60" width="8" height="8" fill="white"/>
+                  <rect x="84" y="72" width="8" height="8" fill="white"/>
+                  <rect x="96" y="60" width="8" height="8" fill="white"/>
+                  <rect x="120" y="84" width="8" height="8" fill="white"/>
+                </svg>
+              </div>
+              <div style="font-size:26px; font-weight:800; letter-spacing:8px; color:var(--text-primary); font-family:monospace; margin-bottom:4px;">A4X9K2</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">Tap QR to enlarge · Expires 4h</div>
+              <button style="background:var(--brand-primary); color:white; border:none; border-radius:14px; padding:14px; font-size:15px; font-weight:700; cursor:pointer; width:100%;">📤 Share this card</button>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:12px;">vital-track · HIPAA compliant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="compare-note" style="margin-top:0;">
+          <h4>Direction 6 strengths</h4>
+          <p>The gradient header and card elevation create the most premium, "app-store-screenshot-worthy" visual impression. The ChildID card design on the gradient background is genuinely beautiful and shareable — it would look great in app store screenshots and marketing. The elevation depth helps users understand hierarchy (what's important, what's context). Best for: brand differentiation, app store visibility, and creating a product that feels like it was designed with care. Risk: slightly heavier visual weight than minimal directions — ensure text contrast is maintained on gradient backgrounds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showDirection(num, btn) {
+  document.querySelectorAll('.direction').forEach(d => d.classList.remove('visible'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('dir-' + num).classList.add('visible');
+  btn.classList.add('active');
+  window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

@@ -1,1 +1,4 @@
 node_modules
+
+# Local MongoDB distribution (binaries exceed GitHub's 100MB limit; install separately)
+workshop/mongodb/

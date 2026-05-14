@@ -1,0 +1,47 @@
+{
+  "name": "@featherkit/themes",
+  "version": "0.0.0",
+  "description": "Curated themes for FeatherKit components",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./light.css": "./dist/light.css",
+    "./dark.css": "./dist/dark.css",
+    "./high-contrast.css": "./dist/high-contrast.css"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "node scripts/build-css.js",
+    "build:js": "tsup",
+    "dev": "npm run build:css && npm run dev:js",
+    "dev:js": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "keywords": [
+    "themes",
+    "css",
+    "design-tokens",
+    "featherkit"
+  ],
+  "author": "FeatherKit Team",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
+  }
+}

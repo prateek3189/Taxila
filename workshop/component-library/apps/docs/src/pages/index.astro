@@ -1,0 +1,349 @@
+---
+title: FeatherKit
+description: A lightweight, accessible, design-token–driven UI component library using Web Components (Lit)
+layout: ../src/layouts/Layout.astro
+---
+
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Build beautiful, accessible UIs with <span class="gradient">FeatherKit</span>
+    </h1>
+    <p class="hero-description">
+      A lightweight, platform-agnostic web component library that works anywhere—React, Vue, Angular, Svelte, or plain HTML.
+    </p>
+    <div class="hero-actions">
+      <a href="/getting-started" class="btn btn-primary">
+        Get Started
+      </a>
+      <a href="/components" class="btn btn-secondary">
+        View Components
+      </a>
+    </div>
+  </div>
+  <div class="hero-demo">
+    <div class="demo-container">
+      <fk-button variant="primary" size="lg">
+        <fk-icon name="star" slot="leading-icon"></fk-icon>
+        Try FeatherKit
+      </fk-button>
+      <fk-button variant="secondary" size="lg">
+        <fk-icon name="github" slot="leading-icon"></fk-icon>
+        View on GitHub
+      </fk-button>
+    </div>
+  </div>
+</div>
+
+<section class="features">
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="zap" size="xl"></fk-icon>
+      </div>
+      <h3>Zero Framework Lock-in</h3>
+      <p>Standards-based custom elements that work in any framework or vanilla HTML.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="package" size="xl"></fk-icon>
+      </div>
+      <h3>Small Bundles</h3>
+      <p>Tree-shakable ESM-first output with components under 3KB gzipped.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="palette" size="xl"></fk-icon>
+      </div>
+      <h3>Design Tokens</h3>
+      <p>CSS custom properties theming with built-in light, dark, and high-contrast themes.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="shield" size="xl"></fk-icon>
+      </div>
+      <h3>A11y First</h3>
+      <p>WCAG 2.2 AA compliant with full keyboard navigation and screen reader support.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="server" size="xl"></fk-icon>
+      </div>
+      <h3>SSR Friendly</h3>
+      <p>Declarative Shadow DOM support for server-side rendering frameworks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <fk-icon name="globe" size="xl"></fk-icon>
+      </div>
+      <h3>Cross-Platform</h3>
+      <p>Works in browsers, WebViews, Electron, Tauri, and any JavaScript environment.</p>
+    </div>
+  </div>
+</section>
+
+<section class="quick-start">
+  <div class="quick-start-content">
+    <h2>Quick Start</h2>
+    <div class="code-tabs">
+      <div class="tab-buttons">
+        <button class="tab-button active" data-tab="cdn">CDN</button>
+        <button class="tab-button" data-tab="npm">npm</button>
+      </div>
+      <div class="tab-content">
+        <div class="tab-panel active" id="cdn">
+          <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type="module" src="https://cdn.jsdelivr.net/npm/@featherkit/components@latest/dist/featherkit.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@featherkit/themes@latest/dist/light.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;fk-button variant="primary"&gt;Hello World&lt;/fk-button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+        <div class="tab-panel" id="npm">
+          <pre><code>npm install @featherkit/core @featherkit/components @featherkit/themes
+
+import '@featherkit/components/button';
+import '@featherkit/themes/light.css';
+
+// Use in your HTML
+document.body.innerHTML = '&lt;fk-button variant="primary"&gt;Hello World&lt;/fk-button&gt;';</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    min-height: 60vh;
+    padding: 4rem 0;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .gradient {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--fk-color-muted-foreground);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: var(--fk-color-primary-500);
+    color: var(--fk-color-primary-foreground);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--fk-color-primary-600);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background-color: var(--fk-color-secondary-100);
+    color: var(--fk-color-secondary-900);
+    border: 1px solid var(--fk-color-secondary-200);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--fk-color-secondary-200);
+  }
+
+  .hero-demo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .demo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    background: var(--fk-color-card);
+    border: 1px solid var(--fk-color-border);
+    border-radius: 1rem;
+    box-shadow: var(--fk-shadow-lg);
+  }
+
+  .features {
+    padding: 6rem 0;
+    background: var(--fk-color-muted);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background: var(--fk-color-card);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--fk-color-border);
+    text-align: center;
+  }
+
+  .feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    background: var(--fk-color-primary-100);
+    color: var(--fk-color-primary-600);
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: var(--fk-color-muted-foreground);
+    line-height: 1.6;
+  }
+
+  .quick-start {
+    padding: 6rem 0;
+  }
+
+  .quick-start-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .quick-start h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+
+  .code-tabs {
+    background: var(--fk-color-card);
+    border: 1px solid var(--fk-color-border);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .tab-buttons {
+    display: flex;
+    background: var(--fk-color-muted);
+    border-bottom: 1px solid var(--fk-color-border);
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .tab-button.active {
+    background: var(--fk-color-card);
+  }
+
+  .tab-panel {
+    display: none;
+    padding: 2rem;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  pre {
+    margin: 0;
+    background: var(--fk-color-muted);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-actions {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  // Tab functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.dataset.tab;
+        
+        // Remove active class from all buttons and panels
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding panel
+        button.classList.add('active');
+        document.getElementById(targetTab).classList.add('active');
+      });
+    });
+  });
+</script>

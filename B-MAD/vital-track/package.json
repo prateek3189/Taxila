@@ -1,0 +1,24 @@
+{
+  "name": "vital-track",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "lint:root": "eslint apps/api/src apps/web/src apps/mobile/App.tsx packages/config/src packages/shared-types/src",
+    "type-check": "turbo run type-check"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "turbo": "^2.0.0",
+    "typescript-eslint": "^8.15.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

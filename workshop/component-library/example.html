@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeatherKit Example</title>
+  
+  <!-- Import FeatherKit components -->
+  <script type="module" src="./packages/components/dist/index.js"></script>
+  
+  <!-- Import themes -->
+  <link rel="stylesheet" href="./packages/themes/dist/light.css">
+  
+  <!-- Import core utilities -->
+  <link rel="stylesheet" href="./packages/core/dist/utilities.css">
+  
+  <style>
+    body {
+      font-family: var(--fk-typography-font-family-sans);
+      margin: 0;
+      padding: 2rem;
+      background-color: var(--fk-color-background);
+      color: var(--fk-color-foreground);
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .demo-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--fk-color-card);
+      border: 1px solid var(--fk-color-border);
+      border-radius: var(--fk-radius-lg);
+    }
+    
+    .demo-section h2 {
+      margin-top: 0;
+      color: var(--fk-color-primary-600);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    
+    .theme-switcher {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      background: var(--fk-color-card);
+      padding: 0.5rem;
+      border-radius: var(--fk-radius-md);
+      border: 1px solid var(--fk-color-border);
+      box-shadow: var(--fk-shadow-md);
+    }
+    
+    .theme-button {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--fk-color-border);
+      background: var(--fk-color-background);
+      color: var(--fk-color-foreground);
+      border-radius: var(--fk-radius-sm);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    
+    .theme-button.active {
+      background: var(--fk-color-primary-500);
+      color: var(--fk-color-primary-foreground);
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-switcher">
+    <button class="theme-button active" data-theme="light">Light</button>
+    <button class="theme-button" data-theme="dark">Dark</button>
+    <button class="theme-button" data-theme="high-contrast">High Contrast</button>
+  </div>
+
+  <div class="container">
+    <h1>FeatherKit Component Library Demo</h1>
+    <p>This is a demonstration of FeatherKit components with theme switching capabilities.</p>
+
+    <div class="demo-section">
+      <h2>Buttons</h2>
+      <p>Various button variants and sizes:</p>
+      
+      <div class="button-group">
+        <fk-button variant="primary">Primary</fk-button>
+        <fk-button variant="secondary">Secondary</fk-button>
+        <fk-button variant="ghost">Ghost</fk-button>
+        <fk-button variant="destructive">Destructive</fk-button>
+      </div>
+      
+      <div class="button-group">
+        <fk-button variant="primary" size="sm">Small</fk-button>
+        <fk-button variant="primary" size="md">Medium</fk-button>
+        <fk-button variant="primary" size="lg">Large</fk-button>
+      </div>
+      
+      <div class="button-group">
+        <fk-button variant="primary" disabled>Disabled</fk-button>
+        <fk-button variant="primary" loading>Loading</fk-button>
+      </div>
+      
+      <div class="button-group">
+        <fk-button variant="primary">
+          <fk-icon name="star" slot="leading-icon"></fk-icon>
+          With Icon
+        </fk-button>
+        <fk-button variant="secondary">
+          <fk-icon name="download" slot="trailing-icon"></fk-icon>
+          Download
+        </fk-button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Icons</h2>
+      <p>Icon component with different sizes:</p>
+      
+      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <fk-icon name="check" size="xs"></fk-icon>
+        <fk-icon name="check" size="sm"></fk-icon>
+        <fk-icon name="check" size="md"></fk-icon>
+        <fk-icon name="check" size="lg"></fk-icon>
+        <fk-icon name="check" size="xl"></fk-icon>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1rem;">
+        <fk-icon name="heart" color="var(--fk-color-error-500)"></fk-icon>
+        <fk-icon name="star" color="var(--fk-color-warning-500)"></fk-icon>
+        <fk-icon name="check-circle" color="var(--fk-color-success-500)"></fk-icon>
+        <fk-icon name="info" color="var(--fk-color-primary-500)"></fk-icon>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Design Tokens</h2>
+      <p>Examples of design tokens in action:</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="padding: 1rem; background: var(--fk-color-primary-50); border-radius: var(--fk-radius-md);">
+          <h4 style="color: var(--fk-color-primary-700); margin-top: 0;">Primary Colors</h4>
+          <div style="display: flex; gap: 0.5rem;">
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-primary-500); border-radius: var(--fk-radius-sm);"></div>
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-primary-600); border-radius: var(--fk-radius-sm);"></div>
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-primary-700); border-radius: var(--fk-radius-sm);"></div>
+          </div>
+        </div>
+        
+        <div style="padding: 1rem; background: var(--fk-color-success-50); border-radius: var(--fk-radius-md);">
+          <h4 style="color: var(--fk-color-success-700); margin-top: 0;">Success Colors</h4>
+          <div style="display: flex; gap: 0.5rem;">
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-success-500); border-radius: var(--fk-radius-sm);"></div>
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-success-600); border-radius: var(--fk-radius-sm);"></div>
+            <div style="width: 2rem; height: 2rem; background: var(--fk-color-success-700); border-radius: var(--fk-radius-sm);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Accessibility Features</h2>
+      <p>FeatherKit components include built-in accessibility features:</p>
+      <ul>
+        <li>Full keyboard navigation support</li>
+        <li>ARIA attributes and roles</li>
+        <li>Focus management</li>
+        <li>Screen reader compatibility</li>
+        <li>High contrast mode support</li>
+        <li>Reduced motion preferences</li>
+      </ul>
+      
+      <p><strong>Try this:</strong> Use Tab to navigate between buttons and press Enter or Space to activate them.</p>
+    </div>
+  </div>
+
+  <script>
+    // Theme switching functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeButtons = document.querySelectorAll('.theme-button');
+      const root = document.documentElement;
+      
+      // Load saved theme or default to light
+      const savedTheme = localStorage.getItem('featherkit-theme') || 'light';
+      applyTheme(savedTheme);
+      
+      themeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const theme = button.dataset.theme;
+          applyTheme(theme);
+          localStorage.setItem('featherkit-theme', theme);
+        });
+      });
+      
+      function applyTheme(theme) {
+        // Remove existing theme classes
+        root.classList.remove('fk-theme-light', 'fk-theme-dark', 'fk-theme-high-contrast');
+        
+        // Add new theme class
+        root.classList.add(`fk-theme-${theme}`);
+        
+        // Update button states
+        themeButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+        
+        // Load theme CSS
+        const existingLink = document.querySelector('link[data-theme]');
+        if (existingLink) {
+          existingLink.remove();
+        }
+        
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `./packages/themes/dist/${theme}.css`;
+        link.setAttribute('data-theme', theme);
+        document.head.appendChild(link);
+      }
+    });
+    
+    // Button click handlers
+    document.addEventListener('fk-click', (event) => {
+      console.log('Button clicked:', event.detail);
+      
+      // Show a simple alert for demo purposes
+      if (event.target.textContent.includes('Primary')) {
+        alert('Primary button clicked!');
+      }
+    });
+  </script>
+</body>
+</html>

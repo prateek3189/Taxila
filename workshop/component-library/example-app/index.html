@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FeatherKit Example App</title>
+
+    <!-- FeatherKit CSS Bundle -->
+    <link rel="stylesheet" href="../dist/cdn/featherkit.css" />
+
+    <style>
+      body {
+        font-family: var(--fk-typography-font-family-sans);
+        margin: 0;
+        padding: 2rem;
+        background-color: var(--fk-color-background);
+        color: var(--fk-color-foreground);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .demo-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--fk-color-card);
+        border: 1px solid var(--fk-color-border);
+        border-radius: var(--fk-radius-lg);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎨 FeatherKit Example App</h1>
+      <p>This example demonstrates FeatherKit components loaded from the CDN bundles.</p>
+
+      <div class="demo-section">
+        <h2>Buttons</h2>
+        <div class="button-group">
+          <fk-button variant="primary">Primary</fk-button>
+          <fk-button variant="secondary">Secondary</fk-button>
+          <fk-button variant="ghost">Ghost</fk-button>
+          <fk-button variant="destructive">Destructive</fk-button>
+        </div>
+
+        <div class="button-group">
+          <fk-button variant="primary" size="sm">Small</fk-button>
+          <fk-button variant="primary" size="md">Medium</fk-button>
+          <fk-button variant="primary" size="lg">Large</fk-button>
+        </div>
+
+        <div class="button-group">
+          <fk-button variant="primary" disabled>Disabled</fk-button>
+          <fk-button variant="primary" loading>
+            <span class="fk-content">Loading</span>
+            <div class="fk-spinner"></div>
+          </fk-button>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h2>Icons</h2>
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap">
+          <fk-icon name="star" color="var(--fk-color-warning-500)"></fk-icon>
+          <fk-icon name="heart" color="var(--fk-color-error-500)"></fk-icon>
+          <fk-icon name="check-circle" color="var(--fk-color-success-500)"></fk-icon>
+          <fk-icon name="info" color="var(--fk-color-primary-500)"></fk-icon>
+          <fk-icon name="user"></fk-icon>
+          <fk-icon name="settings"></fk-icon>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h2>Interactive Example</h2>
+        <p>Click the button below to see it in action:</p>
+        <fk-button variant="primary" id="demo-btn">
+          <fk-icon name="star" size="sm"></fk-icon>
+          Click Me!
+        </fk-button>
+
+        <div
+          id="output"
+          style="
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--fk-color-muted);
+            border-radius: var(--fk-radius-md);
+          "
+        >
+          <p>Button clicks will appear here...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FeatherKit JavaScript Bundle -->
+    <script type="module" src="../dist/cdn/featherkit.js"></script>
+
+    <script>
+      // Button click handler
+      document.addEventListener('fk-click', event => {
+        const buttonText = event.target.textContent.trim();
+        const output = document.getElementById('output');
+        output.innerHTML = `<p>✅ Button clicked: "<strong>${buttonText}</strong>"</p>`;
+
+        console.log('Button clicked:', event.detail);
+      });
+    </script>
+  </body>
+</html>

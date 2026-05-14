@@ -1,0 +1,18 @@
+
+> @vital-track/web@0.1.0 test /Users/prateek.magarde/Documents/vanilla-expo/vital-track/apps/web
+> vitest run
+
+
+ RUN  v1.6.1 /Users/prateek.magarde/Documents/vanilla-expo/vital-track/apps/web
+
+stderr | src/App.test.tsx > App > renders marketing hero
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/App.test.tsx  (1 test) 67ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:44:12
+   Duration  1.66s (transform 148ms, setup 100ms, collect 232ms, tests 67ms, environment 651ms, prepare 284ms)
+

@@ -1,0 +1,20 @@
+
+> @vital-track/mobile@0.1.0 build /Users/prateek.magarde/Documents/vanilla-expo/vital-track/apps/mobile
+> expo export --platform web
+
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Web apps/mobile/index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 542ms apps/mobile/index.js (351 modules)
+
+› web bundles (2):
+_expo/static/css/web-01ad0dccc7ee0359229e3b6366dcbb2d.css (9.4KB)
+_expo/static/js/web/index-33476c8162e629b01408bc4b68cedaf5.js (664KB)
+
+› Files (3):
+favicon.ico (15KB)
+index.html (1.4KB)
+metadata.json (49B)
+
+Exported: dist

@@ -1,0 +1,13 @@
+
+> @vital-track/web@0.1.0 build /Users/prateek.magarde/Documents/vanilla-expo/vital-track/apps/web
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 61 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.40 kB │ gzip:  0.27 kB
+dist/assets/index-CPNHM3jo.css   17.99 kB │ gzip:  4.42 kB
+dist/assets/index-Cf7JiWlU.js   228.44 kB │ gzip: 68.79 kB
+✓ built in 711ms

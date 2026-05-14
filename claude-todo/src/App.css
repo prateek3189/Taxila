@@ -1,0 +1,164 @@
+.app {
+  width: 100%;
+  max-width: 520px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 100;
+  color: #b83f45;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* Input row */
+.input-row {
+  display: flex;
+  border-bottom: 1px solid #ededed;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 16px 20px;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  color: #333;
+}
+
+.add-btn {
+  padding: 16px 20px;
+  background: #b83f45;
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.add-btn:hover {
+  background: #9e3039;
+}
+
+/* List */
+.todo-list {
+  list-style: none;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.1s;
+}
+
+.todo-item:hover {
+  background: #fafafa;
+}
+
+.todo-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #5dc2af;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #333;
+  word-break: break-word;
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: color 0.15s;
+}
+
+.delete-btn:hover {
+  color: #e25555;
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  color: #888;
+  background: #fafafa;
+  border-top: 1px solid #ededed;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filters {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+  color: #777;
+  font-size: 0.8rem;
+  transition: border-color 0.15s;
+}
+
+.filter-btn:hover {
+  border-color: #ccc;
+}
+
+.filter-btn.active {
+  border-color: #b83f45;
+  color: #b83f45;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 3px 4px;
+  border-radius: 3px;
+  transition: color 0.15s;
+}
+
+.clear-btn:hover {
+  color: #e25555;
+}

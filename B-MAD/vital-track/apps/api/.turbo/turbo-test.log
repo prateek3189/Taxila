@@ -1,0 +1,17 @@
+
+> @vital-track/api@0.1.0 test /Users/prateek.magarde/Documents/vanilla-expo/vital-track/apps/api
+> jest
+
+PASS src/app.test.ts
+  API envelope
+    ✓ GET /health returns success envelope (18 ms)
+    ✓ GET /api/v1/health returns version (9 ms)
+    ✓ returns AppError envelope for unknown routes (11 ms)
+  AppError serialization
+    ✓ throws structured error for bad input when validated (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        0.889 s, estimated 2 s
+Ran all test suites.
